@@ -125,7 +125,8 @@ impl Hosts {
             };
 
             for domain in fields.iter().skip(1).map(|domain| domain.to_lowercase()) {
-                if let Ok(name) = Name::from_str(&domain) {
+                if let Ok(mut name) = Name::from_str(&domain) {
+                    name.set_fqdn(true);
                     let record = Record::from_rdata(name.clone(), dns_lru::MAX_TTL, addr.clone());
 
                     match addr {
