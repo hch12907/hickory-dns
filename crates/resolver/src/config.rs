@@ -937,8 +937,8 @@ pub struct ResolverOpts {
     pub ip_strategy: LookupIpStrategy,
     /// Cache size is in number of records (some records can be large)
     pub cache_size: usize,
-    /// Check /ect/hosts file before dns requery (only works for unix like OS)
-    pub use_hosts_file: bool,
+    /// Check /etc/hosts file before dns requery (only works for unix like OS)
+    pub use_hosts_file: Option<bool>,
     /// Optional minimum TTL for positive responses.
     ///
     /// If this is set, any positive responses with a TTL lower than this value will have a TTL of
@@ -999,7 +999,13 @@ impl Default for ResolverOpts {
             validate: false,
             ip_strategy: LookupIpStrategy::default(),
             cache_size: 32,
-            use_hosts_file: true,
+
+            // Making it Option<bool> allows downstream users to have their own
+            // interpretation of "unspecified". For example, ForwardAuthority wants
+            // the resolver to not use local resolver config by default while
+            // AsyncResolver desires the opposite.
+            use_hosts_file: None,
+
             positive_min_ttl: None,
             negative_min_ttl: None,
             positive_max_ttl: None,

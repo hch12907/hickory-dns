@@ -75,6 +75,12 @@ impl ForwardAuthority {
             options.preserve_intermediates = true;
         }
 
+        // If use_hosts_file is never specified, default to false.
+        // See the Default implementation of ResolverOpts for more informmation. 
+        if options.use_hosts_file.is_none() {
+            options.use_hosts_file = Some(false);
+        }
+
         let config = ResolverConfig::from_parts(None, vec![], name_servers);
 
         let resolver = TokioAsyncResolver::new(config, options, TokioConnectionProvider::default());

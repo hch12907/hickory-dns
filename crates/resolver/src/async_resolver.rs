@@ -223,7 +223,9 @@ impl<P: ConnectionProvider> AsyncResolver<P> {
             either = LookupEither::Retry(client);
         }
 
-        let hosts = if options.use_hosts_file {
+        // Read hosts file by default.
+        // See the Default implementation of ResolverOpts for more information.
+        let hosts = if options.use_hosts_file.unwrap_or(true) {
             Some(Arc::new(Hosts::new()))
         } else {
             None
